@@ -1,5 +1,5 @@
-import CineGuessApp from './components/CineGuessApp'
+import CineGuessApp from "./components/CineGuessApp";
 
-export default function Page() {
-  return <CineGuessApp />
+export default function Home() {
+  return <CineGuessApp />;
 }

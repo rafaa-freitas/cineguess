@@ -1,13 +1,46 @@
-'use client'
+"use client";
 
-export default function ModelLoader() {
+import { Brain } from "lucide-react";
+
+interface ModelLoaderProps {
+  progress?: number;
+  message?: string;
+}
+
+export default function ModelLoader({ progress, message }: ModelLoaderProps) {
   return (
-    <div className="flex flex-col items-center gap-4 py-12">
-      <div className="relative w-14 h-14">
-        <div className="absolute inset-0 rounded-full border-4 border-violet-500/20" />
-        <div className="absolute inset-0 rounded-full border-4 border-t-violet-500 animate-spin" />
+    <div className="flex flex-col items-center gap-4 py-8">
+      <div className="relative w-16 h-16">
+        {/* Outer ring */}
+        <div
+          className="absolute inset-0 rounded-full animate-spin-slow"
+          style={{
+            background: "conic-gradient(from 0deg, rgba(124, 58, 237, 0.8) 0%, transparent 70%)",
+          }}
+        />
+        {/* Inner circle */}
+        <div
+          className="absolute inset-1 rounded-full flex items-center justify-center"
+          style={{ background: "var(--bg-card)" }}
+        >
+          <Brain size={22} className="text-purple-400" />
+        </div>
       </div>
-      <p className="text-gray-400 text-sm tracking-wide">Carregando modelo de IA…</p>
+
+      <div className="text-center space-y-1">
+        <p className="text-white/70 text-sm font-medium">{message || "Carregando modelo de IA..."}</p>
+        {progress !== undefined && (
+          <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden mx-auto">
+            <div
+              className="h-full rounded-full transition-all duration-300"
+              style={{
+                width: `${progress}%`,
+                background: "linear-gradient(90deg, #7c3aed, #a855f7)",
+              }}
+            />
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }

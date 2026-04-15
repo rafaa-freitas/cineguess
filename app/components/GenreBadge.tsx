@@ -1,40 +1,76 @@
-'use client'
+"use client";
 
-const GENRE_STYLES: Record<string, string> = {
-  Action:    'bg-orange-500/20 text-orange-300 border-orange-500/30',
-  Animation: 'bg-yellow-400/20 text-yellow-300 border-yellow-400/30',
-  Horror:    'bg-purple-600/20 text-purple-300 border-purple-500/30',
-  Romance:   'bg-pink-500/20 text-pink-300 border-pink-500/30',
-}
+import { Zap, Sparkles, Ghost, Heart } from "lucide-react";
 
-const GENRE_EMOJI: Record<string, string> = {
-  Action:    '⚡',
-  Animation: '✨',
-  Horror:    '👻',
-  Romance:   '💕',
-}
+export type Genre = "Action" | "Animation" | "Horror" | "Romance";
+
+const genreConfig: Record<Genre, { icon: React.ElementType; className: string; solidClass: string; emoji: string }> = {
+  Action: {
+    icon: Zap,
+    className: "genre-action",
+    solidClass: "genre-action-solid",
+    emoji: "⚡",
+  },
+  Animation: {
+    icon: Sparkles,
+    className: "genre-animation",
+    solidClass: "genre-animation-solid",
+    emoji: "✨",
+  },
+  Horror: {
+    icon: Ghost,
+    className: "genre-horror",
+    solidClass: "genre-horror-solid",
+    emoji: "👻",
+  },
+  Romance: {
+    icon: Heart,
+    className: "genre-romance",
+    solidClass: "genre-romance-solid",
+    emoji: "💕",
+  },
+};
 
 interface GenreBadgeProps {
-  genre: string
-  size?: 'sm' | 'md' | 'lg'
+  genre: Genre;
+  size?: "sm" | "md" | "lg";
+  solid?: boolean;
+  selected?: boolean;
+  onClick?: () => void;
+  showIcon?: boolean;
 }
 
-export default function GenreBadge({ genre, size = 'md' }: GenreBadgeProps) {
-  const style = GENRE_STYLES[genre] ?? 'bg-gray-500/20 text-gray-300 border-gray-500/30'
-  const emoji = GENRE_EMOJI[genre] ?? '🎬'
+export default function GenreBadge({
+  genre,
+  size = "md",
+  solid = false,
+  selected = false,
+  onClick,
+  showIcon = true,
+}: GenreBadgeProps) {
+  const config = genreConfig[genre];
+  const Icon = config.icon;
 
-  const sizeClass = {
-    sm: 'text-xs px-2 py-0.5',
-    md: 'text-sm px-3 py-1',
-    lg: 'text-base px-4 py-1.5',
-  }[size]
+  const sizeClasses = {
+    sm: "px-3 py-1 text-xs gap-1",
+    md: "px-4 py-2 text-sm gap-2",
+    lg: "px-6 py-3 text-base gap-2",
+  };
+
+  const baseClasses = `
+    inline-flex items-center font-semibold rounded-full border transition-all duration-300 cursor-pointer select-none
+    ${sizeClasses[size]}
+    ${solid || selected ? `${config.solidClass} text-white border-transparent shadow-lg` : `${config.className} border`}
+    ${onClick ? "hover:scale-105 hover:shadow-lg active:scale-95" : ""}
+    ${selected ? "ring-2 ring-white/30 ring-offset-2 ring-offset-transparent" : ""}
+  `;
 
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border font-medium ${style} ${sizeClass}`}>
-      <span>{emoji}</span>
+    <button className={baseClasses} onClick={onClick} type="button">
+      {showIcon && <Icon size={size === "sm" ? 12 : size === "md" ? 14 : 16} />}
       {genre}
-    </span>
-  )
+    </button>
+  );
 }
 
-export { GENRE_STYLES, GENRE_EMOJI }
+export { genreConfig };
